@@ -1,1 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Client Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <script src="script.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: #f4f6f9;
+    }
+
+    header {
+      background: #1e3c72;
+      color: white;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    header button {
+      background: #ff4d4d;
+      border: none;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .container {
+      padding: 15px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .card p {
+      font-size: 22px;
+      margin: 5px 0 0;
+      color: #1e3c72;
+      font-weight: 600;
+    }
+
+    .section {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .section h3 {
+      margin-top: 0;
+      font-size: 16px;
+      color: #1e3c72;
+      margin-bottom: 12px;
+    }
+
+    .section input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    .section button {
+      background: #1e3c72;
+      border: none;
+      color: white;
+      padding: 10px;
+      width: 100%;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th, td {
+      padding: 8px;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+
+    th {
+      background: #1e3c72;
+      color: white;
+    }
+
+    .report-btn {
+      background: #28a745;
+      margin-top: 10px;
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <!-- Auth Check -->
+  <script>
+    checkAuth("client");
+  </script>
+
+  <header>
+    <h2>Client Dashboard</h2>
+    <button onclick="logout()">Logout</button>
+  </header>
+
+  <div class="container">
+
+    <!-- Dashboard Cards -->
+    <div class="cards">
+      <div class="card">
+        <h3>Total Trips</h3>
+        <p id="tripCount">0</p>
+      </div>
+
+      <div class="card">
+        <h3>Attendance</h3>
+        <p id="attCount">0</p>
+      </div>
+    </div>
+
+    <!-- Trip Form -->
+    <div class="section">
+      <h3>Create Trip</h3>
+
+      <form id="tripForm" onsubmit="event.preventDefault(); saveTrip();">
+
+        <input type="text" id="vehicle" placeholder="Vehicle No (7289)" required>
+
+        <input type="text" id="material" placeholder="Material (Gitti)" required>
+
+        <input type="number" id="qty" placeholder="Quantity (Ton)" required>
+
+        <input type="text" id="site" placeholder="Site (Rajsamand)" required>
+
+        <button type="submit">Save Trip</button>
+
+      </form>
+    </div>
+
+    <!-- Attendance Form -->
+    <div class="section">
+      <h3>Mark Attendance</h3>
+
+      <form id="attForm" onsubmit="event.preventDefault(); saveAttendance();">
+
+        <input type="number" id="workers" placeholder="No. of Workers" required>
+
+        <input type="text" id="attSite" placeholder="Site Name" required>
+
+        <button type="submit">Save Attendance</button>
+
+      </form>
+    </div>
+
+    <!-- Trip List -->
+    <div class="section">
+      <h3>Trip Records</h3>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Vehicle</th>
+            <th>Material</th>
+            <th>Qty</th>
+            <th>Site</th>
+            <th>Time</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody id="tripList">
+          <!-- Data from JS -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Reports -->
+    <div class="section">
+      <h3>Download Report</h3>
+
+      <button class="report-btn" onclick="generateReport()">
+        Download Report
+      </button>
+    </div>
+
+  </div>
+
+</body>
+</html>

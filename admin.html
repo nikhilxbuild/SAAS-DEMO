@@ -1,1 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Panel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <script src="script.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: #eef2f7;
+    }
+
+    header {
+      background: #222f5b;
+      color: white;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    header button {
+      background: #ff4d4d;
+      border: none;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .container {
+      padding: 15px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .card p {
+      font-size: 22px;
+      margin: 5px 0 0;
+      color: #222f5b;
+      font-weight: 600;
+    }
+
+    .section {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .section h3 {
+      margin-top: 0;
+      font-size: 16px;
+      color: #222f5b;
+      margin-bottom: 12px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    th, td {
+      padding: 8px;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+
+    th {
+      background: #222f5b;
+      color: white;
+    }
+
+    .report-btn {
+      background: #28a745;
+      border: none;
+      color: white;
+      padding: 10px;
+      width: 100%;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 15px;
+      margin-top: 10px;
+    }
+
+    .clear-btn {
+      background: #ff9800;
+      border: none;
+      color: white;
+      padding: 10px;
+      width: 100%;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 15px;
+      margin-top: 10px;
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <!-- Auth Check -->
+  <script>
+    checkAuth("admin");
+  </script>
+
+  <header>
+    <h2>Admin Panel</h2>
+    <button onclick="logout()">Logout</button>
+  </header>
+
+  <div class="container">
+
+    <!-- Summary Cards -->
+    <div class="cards">
+
+      <div class="card">
+        <h3>Total Trips</h3>
+        <p id="tripCount">0</p>
+      </div>
+
+      <div class="card">
+        <h3>Total Attendance</h3>
+        <p id="attCount">0</p>
+      </div>
+
+    </div>
+
+    <!-- Trip Records -->
+    <div class="section">
+      <h3>All Trip Records</h3>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Vehicle</th>
+            <th>Material</th>
+            <th>Qty</th>
+            <th>Site</th>
+            <th>Time</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+
+        <tbody id="tripList">
+          <!-- Loaded by JS -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Attendance Records -->
+    <div class="section">
+      <h3>Attendance Records</h3>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Site</th>
+            <th>Workers</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+
+        <tbody id="attList">
+          <!-- Loaded by JS -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Reports -->
+    <div class="section">
+      <h3>Reports & Tools</h3>
+
+      <button class="report-btn" onclick="generateReport()">
+        Download Full Report
+      </button>
+
+      <button class="clear-btn" onclick="clearData()">
+        Reset Demo Data
+      </button>
+    </div>
+
+  </div>
+
+  <script>
+
+    // Load Attendance Table
+    function loadAttendance() {
+
+      const list = document.getElementById("attList");
+
+      if (!list) return;
+
+      let attendance = JSON.parse(localStorage.getItem("attendance")) || [];
+
+      list.innerHTML = "";
+
+      attendance.forEach(a => {
+
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+          <td>${a.site}</td>
+          <td>${a.workers}</td>
+          <td>${a.date}</td>
+        `;
+
+        list.appendChild(row);
+      });
+    }
+
+    // Clear All Demo Data
+    function clearData() {
+
+      if (!confirm("Reset all demo data?")) return;
+
+      localStorage.removeItem("trips");
+      localStorage.removeItem("attendance");
+
+      alert("✅ Demo Reset Done");
+
+      location.reload();
+    }
+
+    // Auto Load
+    window.onload = function () {
+      loadTrips();
+      loadAttendance();
+      loadDashboard();
+    };
+
+  </script>
+
+</body>
+</html>
